@@ -88,7 +88,7 @@ class PolyPay
      *   - contract     (string) Payment contract, optional
      * @param array $options Optional configuration:
      *   - checkout_url (string) Hosted checkout origin, defaults to https://checkout.polypay.ai
-     *   - locale       (string) Locale path segment, defaults to en
+     *   - locale       (string) Optional locale path segment; omit to detect browser language
      * @return string Hosted checkout URL
      * @throws ApiException
      */
