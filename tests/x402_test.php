@@ -153,6 +153,25 @@ assertThrows(
     'unsupported transfer method is rejected before challenge creation'
 );
 
+$supportedNetworks = [
+    'eip155:8453' => '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+    'eip155:1' => '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    'eip155:137' => '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
+    'eip155:42161' => '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+    'eip155:10' => '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
+];
+foreach ($supportedNetworks as $network => $asset) {
+    $helper = new X402(new ApiClient('test-key'), [
+        'resource' => array_merge($resource, ['network' => $network]),
+    ]);
+    $required = json_decode(
+        base64_decode($helper->requirementResponse()['headers']['PAYMENT-REQUIRED']),
+        true
+    );
+    assertSame($network, $required['accepts'][0]['network'], $network . ' network');
+    assertSame($asset, $required['accepts'][0]['asset'], $network . ' USDC contract');
+}
+
 echo "x402 protocol tests passed\n";
 
 /**

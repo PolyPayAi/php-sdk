@@ -188,7 +188,7 @@ The configured `resource` URL and `method` are used as the canonical public requ
 
 Keep the matching Dashboard Resource enabled. Settlement rejects disabled or missing resources. Raw standard facilitator requests that omit method/resource context are accepted only when the enabled Resource resolves uniquely from merchant, network, asset, amount, and recipient.
 
-`paid` reports settlement state. `shouldFulfill` is true only for the request that wins the first confirmed payment-state transition; concurrent or later successful requests receive false. `fulfillmentKey` is the stable PolyPay payment ID. This flag is not a replacement for business idempotency: stateful endpoints must atomically persist their first business response under the unique key and return that stored response on retries. Read-only endpoints may continue serving the same protected representation when `paid` is true.
+The raw facilitator settlement returns `paymentId` and `replayed`. The SDK maps them to `fulfillmentKey` and `shouldFulfill` on the `verifyAndSettle()` result. `paid` reports settlement state. `shouldFulfill` is true only for the request that wins the first confirmed payment-state transition; concurrent or later successful requests receive false. `fulfillmentKey` is the stable PolyPay payment ID. This flag is not a replacement for business idempotency: stateful endpoints must atomically persist their first business response under the unique key and return that stored response on retries. Read-only endpoints may continue serving the same protected representation when `paid` is true.
 
 ## API Reference
 
@@ -222,7 +222,7 @@ Keep the matching Dashboard Resource enabled. Settlement rejects disabled or mis
 | `description` | ❌ | Description shown to agents |
 | `mimeType` | ❌ | Resource MIME type |
 | `scheme` | ❌ | Defaults to `exact` |
-| `network` | ❌ | Defaults to `eip155:8453`; supported: `eip155:8453`, `eip155:1`, `eip155:137` |
+| `network` | ❌ | Defaults to `eip155:8453`; supported: `eip155:8453`, `eip155:1`, `eip155:137`, `eip155:42161`, `eip155:10` |
 | `asset` | ❌ | Defaults to `USDC` |
 | `assetContract` | ❌ | Defaults to the network-specific Circle USDC contract |
 | `maxTimeoutSeconds` | ❌ | Defaults to `60` |
@@ -237,6 +237,8 @@ Supported standard x402 networks:
 | `eip155:8453` | Base | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 | `eip155:1` | Ethereum | `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` |
 | `eip155:137` | Polygon | `0x3c499c542cef5e3811e1192ce70d8cc03d5c3359` |
+| `eip155:42161` | Arbitrum | `0xaf88d065e77c8C2239327C5EDb3A432268e5831` |
+| `eip155:10` | Optimism | `0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85` |
 
 Only standard EVM `exact` payments with Circle USDC `transferWithAuthorization` are supported. BSC, Tron, Solana, TON, and BTC are not part of this standard exact flow.
 
